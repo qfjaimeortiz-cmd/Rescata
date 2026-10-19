@@ -64,6 +64,9 @@ h2{font-size:34px;font-weight:800;letter-spacing:-.8px;line-height:1.1}
 .price b{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800}
 .price s{color:#5B706A;font-size:15px}
 .prod .btn{min-height:46px;width:100%}
+.stock{font-size:14px;font-weight:700;color:#1B6B3A}
+.stock.low{color:#B4530A}
+.stock.out{color:#8A2A2A}
 .empty{padding:40px;text-align:center;color:var(--ink2)}
 .step-n{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:23px;background:var(--accent);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:21px;margin-bottom:10px}
 .stores{background:var(--ink);color:#fff;padding:72px 0}
@@ -223,7 +226,8 @@ Rescata
 <div class="d-foot">
 <div class="total"><span>Total</span><span id="cart-total">$ 0</span></div>
 <button class="btn accent" type="button" id="checkout">Enviar pedido por WhatsApp</button>
-<p class="note">Despacho y forma de pago se coordinan por WhatsApp.</p>
+<p class="note" id="stock-note" role="status" style="color:#B4530A;font-weight:700"></p>
+<p class="note">Despacho y forma de pago se coordinan por WhatsApp. El stock se reserva para quien pague primero.</p>
 </div>
 </aside>
 
@@ -234,18 +238,19 @@ var CORREO_CONTACTO = 'qf.jaimeortiz@gmail.com'; // correo donde llegan las cons
 
 /* ====== PRODUCTOS (edítalos aquí) ======
    vendedor: 'rescata' = lo vendes tú | 'tienda' = de una tienda aliada
+   stock: unidades disponibles (0 = agotado)
    img (opcional): link a una foto del producto */
 var PRODUCTOS = [
- {id:10,nombre:'Neutrogena Hydro Boost Water Gel hidratante facial 50 g',cat:'Skincare',vendedor:'rescata',precio:10000,normal:14890,cond:'Caja levemente abollada',tono:'#FFFFFF',img:'https://images.ctfassets.net/3zfcttr0ztpr/4JQ1YmtkFYZWvkAecFjZB3/0af1df93524cabe5f24772120dfa76ed/cena-pote-e-cartucho-vista-2_1-es-ar.jpeg?w=640'},
- {id:9,nombre:'Bloqueador Eucerin Sun Face Hydro Fluid FPS 50+ 50 ml',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:9990,normal:18990,cond:'Envase dañado',tono:'#FFFFFF',img:'https://images-1.eucerin.com/~/media/eucerin%20relaunch%20media/media-center-items/f/e/a/80b780237a5448caa77adf1a5830dd25-screen.jpg'},
- {id:1,nombre:'Crema hidratante facial 50 g',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:7990,normal:15990,cond:'Envase dañado',tono:'#F1F4E8'},
- {id:2,nombre:'Shampoo reparador 400 ml',cat:'Dermocosmética y cuidado personal',vendedor:'tienda',precio:4490,normal:8990,cond:'Envase dañado',tono:'#E8F0EC'},
- {id:3,nombre:'Set de 3 sartenes antiadherentes',cat:'Hogar y cocina',vendedor:'rescata',precio:24990,normal:49990,cond:'Sin caja original',tono:'#F4EFE3'},
- {id:4,nombre:'Audífonos inalámbricos',cat:'Electrónica',vendedor:'tienda',precio:17990,normal:34990,cond:'Caja abierta',tono:'#E9EEF4'},
- {id:5,nombre:'Zapatillas urbanas, talla 40',cat:'Ropa y calzado',vendedor:'rescata',precio:19990,normal:39990,cond:'Envase dañado',tono:'#F1F4E8'},
- {id:6,nombre:'Protector solar FPS 50',cat:'Dermocosmética y cuidado personal',vendedor:'tienda',precio:6990,normal:13990,cond:'Vencimiento cercano',tono:'#F6EDE6'},
- {id:7,nombre:'Alimento para perro 15 kg',cat:'Mascotas',vendedor:'rescata',precio:21990,normal:32990,cond:'Envase dañado',tono:'#E8F0EC'},
- {id:8,nombre:'Organizador de closet',cat:'Hogar y cocina',vendedor:'tienda',precio:9990,normal:19990,cond:'Envase dañado',tono:'#F4EFE3'}
+ {id:10,nombre:'Neutrogena Hydro Boost Water Gel hidratante facial 50 g',cat:'Skincare',vendedor:'rescata',precio:10000,normal:14890,stock:1,cond:'Caja levemente abollada',tono:'#FFFFFF',img:'https://images.ctfassets.net/3zfcttr0ztpr/4JQ1YmtkFYZWvkAecFjZB3/0af1df93524cabe5f24772120dfa76ed/cena-pote-e-cartucho-vista-2_1-es-ar.jpeg?w=640'},
+ {id:9,nombre:'Bloqueador Eucerin Sun Face Hydro Fluid FPS 50+ 50 ml',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:9990,normal:18990,stock:1,cond:'Envase dañado',tono:'#FFFFFF',img:'https://images-1.eucerin.com/~/media/eucerin%20relaunch%20media/media-center-items/f/e/a/80b780237a5448caa77adf1a5830dd25-screen.jpg'},
+ {id:1,nombre:'Crema hidratante facial 50 g',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:7990,normal:15990,stock:5,cond:'Envase dañado',tono:'#F1F4E8'},
+ {id:2,nombre:'Shampoo reparador 400 ml',cat:'Dermocosmética y cuidado personal',vendedor:'tienda',precio:4490,normal:8990,stock:5,cond:'Envase dañado',tono:'#E8F0EC'},
+ {id:3,nombre:'Set de 3 sartenes antiadherentes',cat:'Hogar y cocina',vendedor:'rescata',precio:24990,normal:49990,stock:5,cond:'Sin caja original',tono:'#F4EFE3'},
+ {id:4,nombre:'Audífonos inalámbricos',cat:'Electrónica',vendedor:'tienda',precio:17990,normal:34990,stock:5,cond:'Caja abierta',tono:'#E9EEF4'},
+ {id:5,nombre:'Zapatillas urbanas, talla 40',cat:'Ropa y calzado',vendedor:'rescata',precio:19990,normal:39990,stock:5,cond:'Envase dañado',tono:'#F1F4E8'},
+ {id:6,nombre:'Protector solar FPS 50',cat:'Dermocosmética y cuidado personal',vendedor:'tienda',precio:6990,normal:13990,stock:5,cond:'Vencimiento cercano',tono:'#F6EDE6'},
+ {id:7,nombre:'Alimento para perro 15 kg',cat:'Mascotas',vendedor:'rescata',precio:21990,normal:32990,stock:5,cond:'Envase dañado',tono:'#E8F0EC'},
+ {id:8,nombre:'Organizador de closet',cat:'Hogar y cocina',vendedor:'tienda',precio:9990,normal:19990,stock:5,cond:'Envase dañado',tono:'#F4EFE3'}
 ];
 var CATEGORIAS = [
  ['Dermocosmética y cuidado personal','Cremas, shampoos, protectores solares'],
@@ -291,7 +296,8 @@ function renderProducts(){
     return '<article class="prod"><div class="ph" style="background:' + p.tono + '">' + (p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(p.nombre) + '" loading="lazy" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:10px"><span class="ref">Imagen referencial</span>' : '<svg width="72" height="72" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M20 38l40-18 40 18v46l-40 18-40-18z" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/><path d="M20 38l40 18 40-18M60 56v46" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/></svg>') + '<span class="pct">-' + pct + '%</span></div>' +
       '<div style="flex:1"><span class="cond">' + esc(p.cond) + '</span><div class="pname">' + esc(p.nombre) + '</div><span class="seller">' + (p.vendedor === 'rescata' ? 'Directo de Rescata' : 'De una tienda aliada') + '</span></div>' +
       '<div class="price"><b>' + clp(p.precio) + '</b><s>' + clp(p.normal) + '</s></div>' +
-      '<button class="btn" type="button" data-add="' + p.id + '">Agregar al carrito</button></article>';
+      (p.stock > 0 ? '<span class="stock' + (p.stock <= 2 ? ' low' : '') + '">' + (p.stock === 1 ? '¡Última unidad!' : 'Quedan ' + p.stock + ' unidades') + '</span>' : '<span class="stock out">Agotado</span>') +
+      (p.stock > 0 ? '<button class="btn" type="button" data-add="' + p.id + '">Agregar al carrito</button>' : '<button class="btn" type="button" disabled style="opacity:.45;cursor:not-allowed">Agotado</button>') + '</article>';
   }).join('');
 }
 function cartItems(){
@@ -315,9 +321,17 @@ function renderCart(){
 }
 function change(id, d){
   var k = String(id);
+  var prod = PRODUCTOS.filter(function(x){ return String(x.id) === k; })[0];
+  var max = prod ? prod.stock : 0;
+  if (d > 0 && (state.cart[k] || 0) >= max) { alertStock(prod); return; }
   state.cart[k] = (state.cart[k] || 0) + d;
   if (state.cart[k] <= 0) delete state.cart[k];
   saveCart(); renderCart();
+}
+function alertStock(p){
+  var n = $('stock-note'); if (!n) return;
+  n.textContent = p ? 'Solo hay ' + p.stock + (p.stock === 1 ? ' unidad' : ' unidades') + ' de ' + p.nombre + '.' : '';
+  setTimeout(function(){ n.textContent = ''; }, 3500);
 }
 function openCart(open){
   $('drawer').classList.toggle('open', open);
@@ -345,7 +359,7 @@ $('checkout').addEventListener('click', function(){
   var items = cartItems(); if (!items.length) return;
   var total = 0;
   var lines = items.map(function(i){ total += i.p.precio * i.qty; return '- ' + i.qty + ' x ' + i.p.nombre + ' (' + i.p.cond + '): ' + clp(i.p.precio * i.qty); });
-  var msg = 'Hola, quiero hacer este pedido en Rescata:\n' + lines.join('\n') + '\nTotal: ' + clp(total);
+  var msg = 'Hola, quiero hacer este pedido en Rescata (entiendo que el stock se asigna a quien pague primero):\n' + lines.join('\n') + '\nTotal: ' + clp(total);
   window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg), '_blank');
 });
 $('sell-form').addEventListener('submit', function(e){
@@ -355,6 +369,11 @@ $('sell-form').addEventListener('submit', function(e){
   window.location.href = 'mailto:' + CORREO_CONTACTO + '?subject=' + encodeURIComponent('Quiero vender en Rescata') + '&body=' + encodeURIComponent(body);
 });
 
+Object.keys(state.cart).forEach(function(k){
+  var p = PRODUCTOS.filter(function(x){ return String(x.id) === k; })[0];
+  if (!p || p.stock <= 0) delete state.cart[k]; else if (state.cart[k] > p.stock) state.cart[k] = p.stock;
+});
+saveCart();
 renderCats(); renderFilters(); renderProducts(); renderCart();
 </script>
 </body>
