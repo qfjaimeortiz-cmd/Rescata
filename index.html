@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rescata - Productos buenos a una fracción del precio</title>
+<meta name="description" content="Productos nuevos con envases dañados o sin caja, a una fracción del precio. Sin medicamentos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>
+:root{--ink:#0E3B34;--ink2:#3D5650;--bg:#F5F6EF;--card:#fff;--line:#DDE3D2;--soft:#E6EBDD;--accent:#C9F26B}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;line-height:1.5}
+h1,h2,h3,.display{font-family:'Bricolage Grotesque','DM Sans',sans-serif;margin:0}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 26px;border-radius:26px;border:2px solid var(--ink);background:var(--ink);color:#fff;font-weight:700;font-size:16px;text-decoration:none;cursor:pointer}
+.btn.accent{background:var(--accent);border-color:var(--accent);color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink)}
+.btn:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #1B7F6E;outline-offset:2px}
+header{border-bottom:1px solid var(--line)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;padding-top:14px;padding-bottom:14px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:28px;letter-spacing:-.5px}
+.search{flex:1 1 260px;min-width:0}
+.search input{width:100%;height:46px;border-radius:23px;border:1px solid #C9D2BC;background:#fff;padding:0 20px;font-size:16px}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;font-weight:500}
+nav a{text-decoration:none}
+.hero{display:flex;flex-wrap:wrap;align-items:center;gap:40px;padding-top:56px;padding-bottom:40px}
+.hero-text{flex:1 1 460px;min-width:0;display:flex;flex-direction:column;gap:22px}
+.tag{align-self:flex-start;padding:8px 16px;border-radius:20px;background:var(--soft);font-weight:700;font-size:14px}
+.hero h1{font-size:clamp(36px,5.2vw,62px);line-height:1.03;letter-spacing:-1.5px;font-weight:800}
+.hero p{margin:0;font-size:19px;color:var(--ink2);max-width:520px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+.hero-card{flex:1 1 360px;min-width:0;background:var(--soft);border-radius:32px;padding:36px 28px;display:flex;justify-content:center}
+section{padding:40px 0}
+h2{font-size:34px;font-weight:800;letter-spacing:-.8px;line-height:1.1}
+.sub{color:var(--ink2);margin:10px 0 0;max-width:640px;font-size:17px}
+.grid{display:grid;gap:18px;margin-top:26px}
+.g-cond{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.g-cat{grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.g-prod{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.g-steps{grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:24px}
+.box h3{font-size:20px;margin-bottom:8px}
+.box p{margin:0;color:var(--ink2)}
+.cat{display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--soft);border:2px solid transparent;border-radius:20px;padding:26px;cursor:pointer;min-height:110px}
+.cat[aria-pressed="true"]{border-color:var(--ink)}
+.cat strong{font-family:'Bricolage Grotesque',sans-serif;font-size:22px}
+.cat span{color:var(--ink2);font-size:15px}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chip{min-height:44px;padding:0 20px;border-radius:22px;border:2px solid var(--ink);background:#fff;font-weight:700;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:#fff}
+.row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+.prod{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ph{position:relative;height:160px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.pct{position:absolute;top:10px;left:10px;padding:5px 11px;border-radius:12px;background:var(--ink);color:var(--accent);font-weight:700;font-size:13px}
+.cond{font-size:13px;font-weight:700;color:var(--ink2)}
+.pname{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;line-height:1.25}
+.seller{font-size:14px;color:var(--ink2)}
+.price{display:flex;align-items:baseline;gap:10px}
+.price b{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800}
+.price s{color:#5B706A;font-size:15px}
+.prod .btn{min-height:46px;width:100%}
+.empty{padding:40px;text-align:center;color:var(--ink2)}
+.step-n{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:23px;background:var(--accent);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:21px;margin-bottom:10px}
+.stores{background:var(--ink);color:#fff;padding:72px 0}
+.stores .sub{color:#D4E2DC}
+.stores .kicker{font-size:14px;font-weight:700;color:var(--accent)}
+.stores-in{display:flex;flex-wrap:wrap;gap:48px}
+.stores-in>div{flex:1 1 420px;min-width:0}
+.offer{background:#164A41;border-radius:22px;padding:26px;margin-bottom:16px}
+.offer h3{font-size:21px;margin-bottom:8px}
+.offer p{margin:0;color:#D4E2DC}
+form.sell{display:flex;flex-direction:column;gap:12px;margin-top:22px}
+form.sell label{font-weight:700;font-size:15px;display:flex;flex-direction:column;gap:6px}
+form.sell input,form.sell textarea{border-radius:12px;border:1px solid #C9D2BC;padding:12px 14px;background:#fff;color:var(--ink);font-size:16px}
+footer{background:var(--soft);padding:44px 0 28px;font-size:15px;color:var(--ink2)}
+.foot{display:flex;flex-wrap:wrap;gap:28px 60px}
+.foot strong{color:var(--ink);display:block;margin-bottom:8px}
+.foot a{display:block;text-decoration:none;margin-bottom:6px}
+.legal{margin-top:28px;font-size:14px}
+/* carrito */
+.cart-btn{position:relative}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;margin-left:8px;border-radius:12px;background:var(--accent);color:var(--ink);font-size:13px;font-weight:800;padding:0 6px}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);background:#fff;box-shadow:-8px 0 30px rgba(0,0,0,.18);transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column;z-index:50}
+.drawer.open{transform:none}
+.veil{position:fixed;inset:0;background:rgba(14,59,52,.45);opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+.veil.open{opacity:1;pointer-events:auto}
+.d-head{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;border-bottom:1px solid var(--line)}
+.d-body{flex:1;overflow:auto;padding:16px 20px}
+.d-foot{padding:18px 20px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:12px}
+.line{display:flex;gap:12px;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
+.qty{display:inline-flex;align-items:center;gap:8px;margin-top:6px}
+.qty button{width:36px;height:36px;border-radius:18px;border:1px solid #C9D2BC;background:#fff;font-size:18px;cursor:pointer}
+.total{display:flex;justify-content:space-between;font-weight:700;font-size:18px}
+.note{font-size:13px;color:var(--ink2);margin:0}
+</style>
+</head>
+<body>
+
+<header>
+<div class="wrap bar">
+<a class="logo" href="#inicio" aria-label="Rescata, inicio">
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect x="3" y="3" width="26" height="26" rx="8" fill="#0E3B34"/><path d="M9 17l5 5 9-11" stroke="#C9F26B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+Rescata
+</a>
+<div class="search"><input id="q" type="search" aria-label="Buscar productos" placeholder="Busca cremas, ollas, zapatillas..."></div>
+<nav>
+<a href="#categorias">Categorías</a>
+<a href="#como-funciona">Cómo funciona</a>
+<a href="#tiendas">Vender en Rescata</a>
+<button class="btn cart-btn" id="open-cart" type="button">Mi carrito<span class="badge" id="count">0</span></button>
+</nav>
+</div>
+</header>
+
+<main id="inicio">
+<div class="wrap hero">
+<div class="hero-text">
+<span class="tag">Productos nuevos, envases golpeados</span>
+<h1>Lo mismo de siempre, con la caja abollada. A una fracción del precio.</h1>
+<p>Rescatamos productos que las tiendas no pueden vender como nuevos por un detalle del envase. Te mostramos cada uno tal cual está, con su condición a la vista.</p>
+<div class="hero-actions">
+<a class="btn accent" href="#catalogo">Ver ofertas</a>
+<a class="btn ghost" href="#tiendas">Quiero vender mis mermas</a>
+</div>
+<p style="font-size:15px">Sin medicamentos: solo productos que se pueden vender con seguridad.</p>
+</div>
+<div class="hero-card" aria-hidden="true">
+<div style="width:100%;max-width:330px;background:#fff;border-radius:24px;padding:20px;display:flex;flex-direction:column;gap:14px">
+<div class="ph" style="background:#F1F4E8;height:190px">
+<svg width="110" height="110" viewBox="0 0 120 120" fill="none"><path d="M20 38l40-18 40 18v46l-40 18-40-18z" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/><path d="M20 38l40 18 40-18M60 56v46" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/></svg>
+<span class="pct">-50%</span>
+</div>
+<span class="cond">Caja abollada · Producto intacto</span>
+<span class="pname" style="font-size:22px">Crema hidratante facial 50 g</span>
+<div class="price"><b style="font-size:30px">$ 7.990</b><s>$ 15.990</s></div>
+</div>
+</div>
+</div>
+
+<section><div class="wrap">
+<h2>Siempre sabrás qué estás comprando</h2>
+<p class="sub">Cada publicación lleva una etiqueta de condición. Nada de sorpresas al abrir la caja.</p>
+<div class="grid g-cond">
+<div class="box"><h3>Envase dañado</h3><p>El producto está intacto. La caja o el envase exterior tiene golpes, rayas o abolladuras.</p></div>
+<div class="box"><h3>Sin caja original</h3><p>Producto nuevo que llega sin su empaque de fábrica, protegido para el despacho.</p></div>
+<div class="box"><h3>Caja abierta</h3><p>Revisado, completo y con todos sus accesorios. Ideal para electrónica y hogar.</p></div>
+<div class="box"><h3>Vencimiento cercano</h3><p>La fecha va visible en la publicación. Solo vendemos productos con plazo suficiente de uso.</p></div>
+</div>
+</div></section>
+
+<section id="categorias"><div class="wrap">
+<h2>Compra por categoría</h2>
+<div class="grid g-cat" id="cats"></div>
+<p class="note" style="margin-top:14px;font-size:15px">En Rescata no se venden medicamentos, ni de venta libre ni con receta.</p>
+</div></section>
+
+<section id="catalogo"><div class="wrap">
+<div class="row">
+<h2>Ofertas del momento</h2>
+<span id="result-count" style="color:var(--ink2)" aria-live="polite"></span>
+</div>
+<div class="filters" id="seller-filters"></div>
+<div class="grid g-prod" id="products"></div>
+</div></section>
+
+<section id="como-funciona"><div class="wrap">
+<h2>Cómo funciona</h2>
+<div class="grid g-steps">
+<div><span class="step-n">1</span><h3>Elige lo que te sirve</h3><p class="sub" style="font-size:16px">Busca por categoría o por nombre. Cada producto muestra cuánto ahorras frente al precio normal.</p></div>
+<div><span class="step-n">2</span><h3>Revisa la condición</h3><p class="sub" style="font-size:16px">Fotos reales, etiqueta de condición y fecha de vencimiento cuando corresponde.</p></div>
+<div><span class="step-n">3</span><h3>Confirma tu pedido</h3><p class="sub" style="font-size:16px">Armas tu carrito y nos envías el pedido por WhatsApp. Coordinamos pago y despacho contigo.</p></div>
+</div>
+</div></section>
+
+<section class="stores" id="tiendas"><div class="wrap stores-in">
+<div>
+<span class="kicker">PARA TIENDAS, DISTRIBUIDORES E IMPORTADORES</span>
+<h2 style="font-size:40px;margin-top:12px">Tus mermas también tienen comprador.</h2>
+<p class="sub">En vez de botar o regalar productos con envases dañados, recupera parte de su valor. Cuéntanos qué tienes y te respondemos.</p>
+<form class="sell" id="sell-form">
+<label>Nombre de tu tienda o empresa<input name="empresa" required></label>
+<label>Correo de contacto<input name="correo" type="email" required></label>
+<label>¿Qué productos tienes y en qué cantidad?<textarea name="detalle" rows="4" required></textarea></label>
+<button class="btn accent" type="submit">Enviar mi consulta</button>
+</form>
+</div>
+<div>
+<div class="offer"><h3>Publica y vende</h3><p>Subes tus productos con su condición y precio mínimo. Pagas una comisión de [X]% solo cuando se concreta la venta.</p></div>
+<div class="offer"><h3>Véndenos el lote</h3><p>Si tienes un volumen grande, Rescata te cotiza y compra el lote completo. Los vendemos nosotros con la etiqueta Directo de Rescata.</p></div>
+</div>
+</div></section>
+
+<section><div class="wrap">
+<h2>Barato, pero con las reglas claras</h2>
+<div class="grid g-steps">
+<div class="box"><h3>Descripción honesta</h3><p>Todo defecto visible se informa en la publicación, con foto. Lo que ves es lo que recibes.</p></div>
+<div class="box"><h3>Revisión antes de publicar</h3><p>Cada producto se revisa antes de salir a la venta. Lo que no cumple, no se publica.</p></div>
+<div class="box"><h3>Cambios y devoluciones</h3><p>Si el producto no coincide con la publicación, te lo cambiamos o te devolvemos tu dinero. [DEFINIR PLAZOS Y CONDICIONES]</p></div>
+</div>
+</div></section>
+</main>
+
+<footer>
+<div class="wrap">
+<div class="foot">
+<div style="flex:1 1 260px"><strong class="display" style="font-size:24px">Rescata</strong>Productos buenos con envases dañados, a una fracción del precio.</div>
+<div><strong>Comprar</strong><a href="#catalogo">Ofertas</a><a href="#categorias">Categorías</a><a href="#como-funciona">Cómo funciona</a></div>
+<div><strong>Vender</strong><a href="#tiendas">Publicar mis productos</a><a href="#tiendas">Vender un lote</a></div>
+</div>
+<div class="legal">[RAZÓN SOCIAL] · [RUT] · No comercializamos medicamentos.</div>
+</div>
+</footer>
+
+<div class="veil" id="veil"></div>
+<aside class="drawer" id="drawer" aria-label="Carrito de compras" aria-hidden="true">
+<div class="d-head"><h3 style="font-size:22px">Tu carrito</h3><button class="btn ghost" style="min-height:40px;padding:0 16px" type="button" id="close-cart">Cerrar</button></div>
+<div class="d-body" id="cart-body"></div>
+<div class="d-foot">
+<div class="total"><span>Total</span><span id="cart-total">$ 0</span></div>
+<button class="btn accent" type="button" id="checkout">Enviar pedido por WhatsApp</button>
+<p class="note">Despacho y forma de pago se coordinan por WhatsApp.</p>
+</div>
+</aside>
+
+<script>
+/* ====== CONFIGURA AQUÍ ====== */
+var WHATSAPP = '56920997495';              // tu número, con 56 y sin +
+var CORREO_CONTACTO = 'qf.jaimeortiz@gmail.com'; // correo donde llegan las consultas de tiendas
+
+/* ====== PRODUCTOS (edítalos aquí) ======
+   vendedor: 'rescata' = lo vendes tú | 'tienda' = de una tienda aliada */
+var PRODUCTOS = [
+ {id:1,nombre:'Crema hidratante facial 50 g',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:7990,normal:15990,cond:'Envase dañado',tono:'#F1F4E8'},
+ {id:2,nombre:'Shampoo reparador 400 ml',cat:'Dermocosmética y cuidado personal',vendedor:'tienda',precio:4490,normal:8990,cond:'Envase dañado',tono:'#E8F0EC'},
+ {id:3,nombre:'Set de 3 sartenes antiadherentes',cat:'Hogar y cocina',vendedor:'rescata',precio:24990,normal:49990,cond:'Sin caja original',tono:'#F4EFE3'},
+ {id:4,nombre:'Audífonos inalámbricos',cat:'Electrónica',vendedor:'tienda',precio:17990,normal:34990,cond:'Caja abierta',tono:'#E9EEF4'},
+ {id:5,nombre:'Zapatillas urbanas, talla 40',cat:'Ropa y calzado',vendedor:'rescata',precio:19990,normal:39990,cond:'Envase dañado',tono:'#F1F4E8'},
+ {id:6,nombre:'Protector solar FPS 50',cat:'Dermocosmética y cuidado personal',vendedor:'tienda',precio:6990,normal:13990,cond:'Vencimiento cercano',tono:'#F6EDE6'},
+ {id:7,nombre:'Alimento para perro 15 kg',cat:'Mascotas',vendedor:'rescata',precio:21990,normal:32990,cond:'Envase dañado',tono:'#E8F0EC'},
+ {id:8,nombre:'Organizador de closet',cat:'Hogar y cocina',vendedor:'tienda',precio:9990,normal:19990,cond:'Envase dañado',tono:'#F4EFE3'}
+];
+var CATEGORIAS = [
+ ['Dermocosmética y cuidado personal','Cremas, shampoos, protectores solares'],
+ ['Hogar y cocina','Sartenes, organizadores, textiles'],
+ ['Electrónica','Audífonos, cargadores, accesorios'],
+ ['Ropa y calzado','Zapatillas, polerones, accesorios'],
+ ['Mascotas','Alimento, camas, juguetes'],
+ ['Despensa','Envasados con fecha a la vista']
+];
+/* ====== FIN DE LA CONFIGURACIÓN ====== */
+
+var state = {cat:'', vend:'todos', q:'', cart:{}};
+try { state.cart = JSON.parse(localStorage.getItem('rescata_cart') || '{}'); } catch(e) { state.cart = {}; }
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function clp(n){ return '$ ' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+function saveCart(){ try { localStorage.setItem('rescata_cart', JSON.stringify(state.cart)); } catch(e) {} }
+
+function renderCats(){
+  $('cats').innerHTML = CATEGORIAS.map(function(c){
+    return '<button type="button" class="cat" data-cat="' + esc(c[0]) + '" aria-pressed="' + (state.cat === c[0]) + '"><strong>' + esc(c[0]) + '</strong><span>' + esc(c[1]) + '</span></button>';
+  }).join('');
+}
+function renderFilters(){
+  var defs = [['todos','Todos'],['rescata','Directo de Rescata'],['tienda','De tiendas aliadas']];
+  var html = defs.map(function(d){
+    return '<button type="button" class="chip" data-vend="' + d[0] + '" aria-pressed="' + (state.vend === d[0]) + '">' + d[1] + '</button>';
+  }).join('');
+  if (state.cat) html += '<button type="button" class="chip" data-clear="1">Quitar categoría: ' + esc(state.cat) + ' ×</button>';
+  $('seller-filters').innerHTML = html;
+}
+function renderProducts(){
+  var q = state.q.trim().toLowerCase();
+  var list = PRODUCTOS.filter(function(p){
+    return (!state.cat || p.cat === state.cat) && (state.vend === 'todos' || p.vendedor === state.vend) && (!q || p.nombre.toLowerCase().indexOf(q) > -1 || p.cat.toLowerCase().indexOf(q) > -1);
+  });
+  $('result-count').textContent = list.length + (list.length === 1 ? ' producto' : ' productos');
+  if (!list.length) { $('products').innerHTML = '<div class="empty">No encontramos productos con ese filtro.</div>'; return; }
+  $('products').innerHTML = list.map(function(p){
+    var pct = Math.round((1 - p.precio / p.normal) * 100);
+    return '<article class="prod"><div class="ph" style="background:' + p.tono + '"><svg width="72" height="72" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M20 38l40-18 40 18v46l-40 18-40-18z" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/><path d="M20 38l40 18 40-18M60 56v46" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/></svg><span class="pct">-' + pct + '%</span></div>' +
+      '<div style="flex:1"><span class="cond">' + esc(p.cond) + '</span><div class="pname">' + esc(p.nombre) + '</div><span class="seller">' + (p.vendedor === 'rescata' ? 'Directo de Rescata' : 'De una tienda aliada') + '</span></div>' +
+      '<div class="price"><b>' + clp(p.precio) + '</b><s>' + clp(p.normal) + '</s></div>' +
+      '<button class="btn" type="button" data-add="' + p.id + '">Agregar al carrito</button></article>';
+  }).join('');
+}
+function cartItems(){
+  return Object.keys(state.cart).map(function(id){
+    var p = PRODUCTOS.filter(function(x){ return String(x.id) === id; })[0];
+    return p ? {p:p, qty:state.cart[id]} : null;
+  }).filter(Boolean);
+}
+function renderCart(){
+  var items = cartItems(), total = 0, count = 0;
+  items.forEach(function(i){ total += i.p.precio * i.qty; count += i.qty; });
+  $('count').textContent = count;
+  $('cart-total').textContent = clp(total);
+  $('checkout').disabled = !items.length;
+  $('checkout').style.opacity = items.length ? '1' : '.5';
+  $('cart-body').innerHTML = items.length ? items.map(function(i){
+    return '<div class="line"><div><div class="pname" style="font-size:16px">' + esc(i.p.nombre) + '</div><span class="cond">' + esc(i.p.cond) + '</span>' +
+      '<div class="qty"><button type="button" aria-label="Quitar una unidad" data-dec="' + i.p.id + '">-</button><span>' + i.qty + '</span><button type="button" aria-label="Agregar una unidad" data-inc="' + i.p.id + '">+</button></div></div>' +
+      '<b>' + clp(i.p.precio * i.qty) + '</b></div>';
+  }).join('') : '<div class="empty">Tu carrito está vacío.</div>';
+}
+function change(id, d){
+  var k = String(id);
+  state.cart[k] = (state.cart[k] || 0) + d;
+  if (state.cart[k] <= 0) delete state.cart[k];
+  saveCart(); renderCart();
+}
+function openCart(open){
+  $('drawer').classList.toggle('open', open);
+  $('veil').classList.toggle('open', open);
+  $('drawer').setAttribute('aria-hidden', String(!open));
+  if (open) $('close-cart').focus(); else $('open-cart').focus();
+}
+
+document.addEventListener('click', function(e){
+  var t = e.target.closest('button'); if (!t) return;
+  if (t.dataset.cat !== undefined) { state.cat = (state.cat === t.dataset.cat) ? '' : t.dataset.cat; renderCats(); renderFilters(); renderProducts(); $('catalogo').scrollIntoView({behavior:'smooth'}); }
+  else if (t.dataset.vend) { state.vend = t.dataset.vend; renderFilters(); renderProducts(); }
+  else if (t.dataset.clear) { state.cat = ''; renderCats(); renderFilters(); renderProducts(); }
+  else if (t.dataset.add) { change(t.dataset.add, 1); openCart(true); }
+  else if (t.dataset.inc) change(t.dataset.inc, 1);
+  else if (t.dataset.dec) change(t.dataset.dec, -1);
+});
+$('open-cart').addEventListener('click', function(){ openCart(true); });
+$('close-cart').addEventListener('click', function(){ openCart(false); });
+$('veil').addEventListener('click', function(){ openCart(false); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') openCart(false); });
+$('q').addEventListener('input', function(e){ state.q = e.target.value; renderProducts(); });
+
+$('checkout').addEventListener('click', function(){
+  var items = cartItems(); if (!items.length) return;
+  var total = 0;
+  var lines = items.map(function(i){ total += i.p.precio * i.qty; return '- ' + i.qty + ' x ' + i.p.nombre + ' (' + i.p.cond + '): ' + clp(i.p.precio * i.qty); });
+  var msg = 'Hola, quiero hacer este pedido en Rescata:\n' + lines.join('\n') + '\nTotal: ' + clp(total);
+  window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(msg), '_blank');
+});
+$('sell-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  var f = e.target;
+  var body = 'Empresa: ' + f.empresa.value + '\nCorreo: ' + f.correo.value + '\n\n' + f.detalle.value;
+  window.location.href = 'mailto:' + CORREO_CONTACTO + '?subject=' + encodeURIComponent('Quiero vender en Rescata') + '&body=' + encodeURIComponent(body);
+});
+
+renderCats(); renderFilters(); renderProducts(); renderCart();
+</script>
+</body>
+</html>
