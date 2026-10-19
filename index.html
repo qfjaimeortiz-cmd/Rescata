@@ -55,6 +55,7 @@ h2{font-size:34px;font-weight:800;letter-spacing:-.8px;line-height:1.1}
 .row{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
 .prod{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .ph{position:relative;height:160px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.ref{position:absolute;bottom:8px;right:8px;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.9);font-size:11px;font-weight:700;color:#3D5650}
 .pct{position:absolute;top:10px;left:10px;padding:5px 11px;border-radius:12px;background:var(--ink);color:var(--accent);font-weight:700;font-size:13px}
 .cond{font-size:13px;font-weight:700;color:var(--ink2)}
 .pname{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:18px;line-height:1.25}
@@ -232,8 +233,10 @@ var WHATSAPP = '56920997495';              // tu número, con 56 y sin +
 var CORREO_CONTACTO = 'qf.jaimeortiz@gmail.com'; // correo donde llegan las consultas de tiendas
 
 /* ====== PRODUCTOS (edítalos aquí) ======
-   vendedor: 'rescata' = lo vendes tú | 'tienda' = de una tienda aliada */
+   vendedor: 'rescata' = lo vendes tú | 'tienda' = de una tienda aliada
+   img (opcional): link a una foto del producto */
 var PRODUCTOS = [
+ {id:9,nombre:'Bloqueador Eucerin Sun Face Hydro Fluid FPS 50+ 50 ml',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:9990,normal:18990,cond:'Envase dañado',tono:'#FFFFFF',img:'https://images-1.eucerin.com/~/media/eucerin%20relaunch%20media/media-center-items/f/e/a/80b780237a5448caa77adf1a5830dd25-screen.jpg'},
  {id:1,nombre:'Crema hidratante facial 50 g',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:7990,normal:15990,cond:'Envase dañado',tono:'#F1F4E8'},
  {id:2,nombre:'Shampoo reparador 400 ml',cat:'Dermocosmética y cuidado personal',vendedor:'tienda',precio:4490,normal:8990,cond:'Envase dañado',tono:'#E8F0EC'},
  {id:3,nombre:'Set de 3 sartenes antiadherentes',cat:'Hogar y cocina',vendedor:'rescata',precio:24990,normal:49990,cond:'Sin caja original',tono:'#F4EFE3'},
@@ -283,7 +286,7 @@ function renderProducts(){
   if (!list.length) { $('products').innerHTML = '<div class="empty">No encontramos productos con ese filtro.</div>'; return; }
   $('products').innerHTML = list.map(function(p){
     var pct = Math.round((1 - p.precio / p.normal) * 100);
-    return '<article class="prod"><div class="ph" style="background:' + p.tono + '"><svg width="72" height="72" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M20 38l40-18 40 18v46l-40 18-40-18z" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/><path d="M20 38l40 18 40-18M60 56v46" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/></svg><span class="pct">-' + pct + '%</span></div>' +
+    return '<article class="prod"><div class="ph" style="background:' + p.tono + '">' + (p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(p.nombre) + '" loading="lazy" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:10px"><span class="ref">Imagen referencial</span>' : '<svg width="72" height="72" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M20 38l40-18 40 18v46l-40 18-40-18z" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/><path d="M20 38l40 18 40-18M60 56v46" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/></svg>') + '<span class="pct">-' + pct + '%</span></div>' +
       '<div style="flex:1"><span class="cond">' + esc(p.cond) + '</span><div class="pname">' + esc(p.nombre) + '</div><span class="seller">' + (p.vendedor === 'rescata' ? 'Directo de Rescata' : 'De una tienda aliada') + '</span></div>' +
       '<div class="price"><b>' + clp(p.precio) + '</b><s>' + clp(p.normal) + '</s></div>' +
       '<button class="btn" type="button" data-add="' + p.id + '">Agregar al carrito</button></article>';
