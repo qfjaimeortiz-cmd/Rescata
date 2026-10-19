@@ -67,6 +67,9 @@ h2{font-size:34px;font-weight:800;letter-spacing:-.8px;line-height:1.1}
 .stock{font-size:14px;font-weight:700;color:#1B6B3A}
 .stock.low{color:#B4530A}
 .stock.out{color:#8A2A2A}
+.soldout .ph img,.soldout .ph svg{filter:grayscale(1);opacity:.55}
+.soldout .pct{background:#6B6B6B;color:#fff}
+.soldout .price b{color:#6B6B6B}
 .empty{padding:40px;text-align:center;color:var(--ink2)}
 .step-n{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:23px;background:var(--accent);font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:21px;margin-bottom:10px}
 .stores{background:var(--ink);color:#fff;padding:72px 0}
@@ -242,7 +245,7 @@ var CORREO_CONTACTO = 'qf.jaimeortiz@gmail.com'; // correo donde llegan las cons
    img (opcional): link a una foto del producto */
 var PRODUCTOS = [
  {id:10,nombre:'Neutrogena Hydro Boost Water Gel hidratante facial 50 g',cat:'Skincare',vendedor:'rescata',precio:10000,normal:14890,stock:1,cond:'Caja levemente abollada',tono:'#FFFFFF',img:'https://images.ctfassets.net/3zfcttr0ztpr/4JQ1YmtkFYZWvkAecFjZB3/0af1df93524cabe5f24772120dfa76ed/cena-pote-e-cartucho-vista-2_1-es-ar.jpeg?w=640'},
- {id:9,nombre:'Bloqueador Eucerin Sun Face Hydro Fluid FPS 50+ 50 ml',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:9990,normal:18990,stock:1,cond:'Envase dañado',tono:'#FFFFFF',img:'https://images-1.eucerin.com/~/media/eucerin%20relaunch%20media/media-center-items/f/e/a/80b780237a5448caa77adf1a5830dd25-screen.jpg'},
+ {id:9,nombre:'Bloqueador Eucerin Sun Face Hydro Fluid FPS 50+ 50 ml',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:9990,normal:18990,stock:0,cond:'Envase dañado',tono:'#FFFFFF',img:'https://images-1.eucerin.com/~/media/eucerin%20relaunch%20media/media-center-items/f/e/a/80b780237a5448caa77adf1a5830dd25-screen.jpg'},
  {id:1,nombre:'Crema hidratante facial 50 g',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:7990,normal:15990,stock:5,cond:'Envase dañado',tono:'#F1F4E8'},
  {id:2,nombre:'Shampoo reparador 400 ml',cat:'Dermocosmética y cuidado personal',vendedor:'tienda',precio:4490,normal:8990,stock:5,cond:'Envase dañado',tono:'#E8F0EC'},
  {id:3,nombre:'Set de 3 sartenes antiadherentes',cat:'Hogar y cocina',vendedor:'rescata',precio:24990,normal:49990,stock:5,cond:'Sin caja original',tono:'#F4EFE3'},
@@ -289,15 +292,16 @@ function renderProducts(){
   var list = PRODUCTOS.filter(function(p){
     return (!state.cat || p.cat === state.cat) && (state.vend === 'todos' || p.vendedor === state.vend) && (!q || p.nombre.toLowerCase().indexOf(q) > -1 || p.cat.toLowerCase().indexOf(q) > -1);
   });
+  list = list.filter(function(p){ return p.stock > 0; }).concat(list.filter(function(p){ return p.stock <= 0; }));
   $('result-count').textContent = list.length + (list.length === 1 ? ' producto' : ' productos');
   if (!list.length) { $('products').innerHTML = '<div class="empty">No encontramos productos con ese filtro.</div>'; return; }
   $('products').innerHTML = list.map(function(p){
     var pct = Math.round((1 - p.precio / p.normal) * 100);
-    return '<article class="prod"><div class="ph" style="background:' + p.tono + '">' + (p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(p.nombre) + '" loading="lazy" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:10px"><span class="ref">Imagen referencial</span>' : '<svg width="72" height="72" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M20 38l40-18 40 18v46l-40 18-40-18z" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/><path d="M20 38l40 18 40-18M60 56v46" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/></svg>') + '<span class="pct">-' + pct + '%</span></div>' +
+    return '<article class="prod' + (p.stock > 0 ? '' : ' soldout') + '"><div class="ph" style="background:' + p.tono + '">' + (p.img ? '<img src="' + esc(p.img) + '" alt="' + esc(p.nombre) + '" loading="lazy" style="max-width:100%;max-height:100%;object-fit:contain;border-radius:10px"><span class="ref">Imagen referencial</span>' : '<svg width="72" height="72" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M20 38l40-18 40 18v46l-40 18-40-18z" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/><path d="M20 38l40 18 40-18M60 56v46" stroke="#0E3B34" stroke-width="4" stroke-linejoin="round"/></svg>') + '<span class="pct">-' + pct + '%</span></div>' +
       '<div style="flex:1"><span class="cond">' + esc(p.cond) + '</span><div class="pname">' + esc(p.nombre) + '</div><span class="seller">' + (p.vendedor === 'rescata' ? 'Directo de Rescata' : 'De una tienda aliada') + '</span></div>' +
       '<div class="price"><b>' + clp(p.precio) + '</b><s>' + clp(p.normal) + '</s></div>' +
-      (p.stock > 0 ? '<span class="stock' + (p.stock <= 2 ? ' low' : '') + '">' + (p.stock === 1 ? '¡Última unidad!' : 'Quedan ' + p.stock + ' unidades') + '</span>' : '<span class="stock out">Agotado</span>') +
-      (p.stock > 0 ? '<button class="btn" type="button" data-add="' + p.id + '">Agregar al carrito</button>' : '<button class="btn" type="button" disabled style="opacity:.45;cursor:not-allowed">Agotado</button>') + '</article>';
+      (p.stock > 0 ? '<span class="stock' + (p.stock <= 2 ? ' low' : '') + '">' + (p.stock === 1 ? '¡Última unidad!' : 'Quedan ' + p.stock + ' unidades') + '</span>' : '<span class="stock out">Sin stock</span>') +
+      (p.stock > 0 ? '<button class="btn" type="button" data-add="' + p.id + '">Agregar al carrito</button>' : '<button class="btn" type="button" disabled style="opacity:.45;cursor:not-allowed">Sin stock</button>') + '</article>';
   }).join('');
 }
 function cartItems(){
