@@ -465,7 +465,7 @@ function openCart(open){
   $('drawer').classList.toggle('open', open);
   $('veil').classList.toggle('open', open);
   $('drawer').setAttribute('aria-hidden', String(!open));
-  if (open) $('close-cart').focus(); else $('open-cart').focus();
+  if (open) $('close-cart').focus({preventScroll:true}); else $('open-cart').focus({preventScroll:true});
 }
 
 document.addEventListener('click', function(e){
