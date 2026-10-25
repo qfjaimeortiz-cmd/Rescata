@@ -378,6 +378,8 @@ var PRODUCTOS = [
  {id:96,nombre:'Avène Ultra Sérum SPF 50+ protección celular, 30 ml',cat:'Skincare',vendedor:'rescata',precio:21000,normal:34999,stock:1,cond:'Caja levemente abollada',tono:'#FFFFFF',img:'https://static.salcobrand.cl/spree/products/193094/large/595578_1.jpg?1781709306'},
  {id:97,nombre:'Nivea Q10 Anti-Arrugas Power Crema de noche extra reafirmante 50 ml',cat:'Skincare',vendedor:'rescata',precio:9000,normal:14199,stock:1,cond:'Caja levemente abollada',tono:'#FFFFFF',img:'https://static.salcobrand.cl/spree/products/188302/large/4151289_2.jpg?1779802290'},
  {id:98,nombre:'Nivea Q10 Anti-Arrugas Power Crema de día extra reafirmante FPS 15, 50 ml',cat:'Skincare',vendedor:'rescata',precio:9000,normal:14999,stock:1,cond:'Caja levemente abollada',tono:'#FFFFFF',img:'https://static.salcobrand.cl/spree/products/188262/large/576132_2.jpg?1779801003'},
+ {id:99,nombre:'ISDIN Reparador labial con ácido hialurónico, stick 4 g',cat:'Skincare',vendedor:'rescata',precio:6000,normal:9199,stock:1,cond:'Caja levemente abollada',tono:'#FFFFFF',img:'https://static.salcobrand.cl/spree/products/135949/large/573274-1.jpg?1741027707'},
+ {id:100,nombre:'ISDIN Fotoprotector Invisible Stick FPS 50, 10 g',cat:'Skincare',vendedor:'rescata',precio:10000,normal:16999,stock:1,cond:'Caja levemente abollada',tono:'#FFFFFF',img:'https://static.salcobrand.cl/spree/products/120309/large/588061-1.jpg?1725291130'},
  {id:9,nombre:'Bloqueador Eucerin Sun Face Hydro Fluid FPS 50+ 50 ml',cat:'Dermocosmética y cuidado personal',vendedor:'rescata',precio:9990,normal:18990,stock:0,cond:'Envase dañado',tono:'#FFFFFF',img:'https://images-1.eucerin.com/~/media/eucerin%20relaunch%20media/media-center-items/f/e/a/80b780237a5448caa77adf1a5830dd25-screen.jpg'}
 ];
 var CATEGORIAS = [
@@ -423,7 +425,7 @@ function renderProducts(){
   list = list.filter(function(p){ return p.stock > 0; }).concat(list.filter(function(p){ return p.stock <= 0; }));
   $('result-count').textContent = list.length + (list.length === 1 ? ' producto' : ' productos');
   if (!list.length) { $('products').innerHTML = '<div class="empty">No encontramos productos con ese filtro.</div>'; return; }
-  var MARCAS = [['Vichy','Vichy'],['La Roche-Posay','La Roche-Posay'],['Avène','Avène'],['Eucerin','Eucerin'],['ISDIN','ISDIN'],['Neutrogena','Neutrogena'],['Nivea','Nivea'],['Uriage','Uriage']];
+  var MARCAS = [['Vichy','Vichy'],['La Roche-Posay','La Roche-Posay'],['Avène','Avène'],['CeraVe','CeraVe'],['Eucerin','Eucerin'],['ISDIN','ISDIN'],['Neutrogena','Neutrogena'],['Nivea','Nivea'],['Uriage','Uriage']];
   function marcaDe(p){ var n = p.nombre.toLowerCase(); for (var i = 0; i < MARCAS.length; i++) { if (n.indexOf(MARCAS[i][0].toLowerCase()) === 0) return MARCAS[i][1]; } return 'Otros'; }
   function card(p){
     var pct = Math.round((1 - p.precio / p.normal) * 100);
